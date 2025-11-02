@@ -30,18 +30,16 @@ function prepare_or_die($conexion, $sql, $ctx = '') {
 $userKey = isset($_GET['user']) ? trim($_GET['user']) : '';
 $usuario = null;
 
-if ($userKey !== '') {
-    $sql = "SELECT * FROM `usuario` WHERE correo = ? OR telefono = ? OR dni = ? OR user = ? LIMIT 1";
-    $stmt = prepare_or_die($conexion, $sql, 'SELECT usuario');
-    $stmt->bind_param("ssss", $userKey, $userKey, $userKey, $userKey);
-    $stmt->execute();
-    $res = mysqli_stmt_get_result($stmt);
-    $usuario = mysqli_fetch_assoc($res);
-    $stmt->close();
-}
-
-if ($_SESSION['usuario'] !== $usuario['user']) {
-    die("No tienes permisos para modificar este usuario.");
+if ($_SESSION['usuario'] !== $userKey) {
+	die("No tienes permisos para acceder a este usuario.");
+} else {
+	$sql = "SELECT * FROM `usuario` WHERE user = ? LIMIT 1";
+	$stmt = prepare_or_die($conexion, $sql, 'SELECT usuario');
+	$stmt->bind_param("s", $_SESSION['usuario']);
+	$stmt->execute();
+	$res = mysqli_stmt_get_result($stmt);
+	$usuario = mysqli_fetch_assoc($res);
+	$stmt->close();
 }
 
 // Usuario no existente
@@ -155,7 +153,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <div class="bar">
     <div class="volver_button">
-        <a href="show_user.php?user=<?= urlencode($usuario['user']) ?>" title="Volver al inicio">
+        <a href="show_user.php?user=<?= urlencode($_SESSION['usuario']) ?>" title="Volver al inicio">
             <i class="fa-solid fa-arrow-left"></i>
         </a>
     </div>
@@ -172,7 +170,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php endif; ?>
 
         <div class="rellenar">
-            <form id="user_modify_form" action="modify_user.php?user=<?= urlencode($usuario['user']) ?>" method="post" class="labels">
+            <form id="user_modify_form" action="modify_user.php?user=<?= urlencode($_SESSION['usuario']) ?>" method="post" class="labels">
                 <div class="readonly-field">
                     <label for="user_display">Usuario</label>
                     <input type="text" id="user_display" value="<?= htmlspecialchars($usuario['user']) ?>" readonly class="input-readonly">

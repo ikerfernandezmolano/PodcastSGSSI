@@ -24,22 +24,20 @@ $userKey = isset($_GET['user']) ? trim($_GET['user']) : '';
 if ($_SESSION['usuario'] !== $userKey) {
 	die("No tienes permisos para acceder a este usuario.");
 } else {
-	if ($userKey !== '') {
-	    $sql = "SELECT user, dni, nombre, apellidos, correo, contrasena, telefono, fecha_nacimiento 
-		    FROM usuario 
-		    WHERE correo = ? OR dni = ? OR telefono = ? OR user = ?";
-	    $stmt = $conexion->prepare($sql);
-	    if (!$stmt) {
+	$sql = "SELECT user, dni, nombre, apellidos, correo, contrasena, telefono, fecha_nacimiento 
+		FROM usuario 
+		WHERE user = ?";
+	$stmt = $conexion->prepare($sql);
+	if (!$stmt) {
 		die("Error al preparar la consulta: " . mysqli_error($conexion));
-	    }
-	    $stmt->bind_param("ssss", $userKey, $userKey, $userKey, $userKey);
-	    if ($stmt->execute()) {
+	}
+	$stmt->bind_param("s", $_SESSION['usuario']);
+	if ($stmt->execute()) {
 		$stmt->store_result();
 		$stmt->bind_result($user,$dni,$nombre,$apellidos,$correo,$pswd,$telefono,$fecha_nacimiento);
 		$stmt->fetch();
-	    } else {
+	} else {
 		die("Error al ejecutar la consulta: " . mysqli_stmt_error($stmt));
-	    }
 	}
 }
 
@@ -72,7 +70,7 @@ $conexion->close();
         </a>
     </div>
     <h1>DATOS DEL USUARIO</h1>
-    <a href="modify_user.php?user=<?= urlencode($user) ?>">
+    <a href="modify_user.php?user=<?= urlencode($_SESSION['usuario']) ?>">
         <button>Modificar</button>
     </a>
 </div>
