@@ -9,12 +9,20 @@ $dbname   = "database";
 $message = "";
 $message_color = "red";
 
+session_start();
+if (!isset($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
 // Conexión con la base de datos
 $conexion = new mysqli($hostname, $username, $password, $dbname);
 if ($conexion->connect_error) {
     $message = "Error de conexión a la base de datos: " . $conexion->connect_error;
 } else {
     if ($_SERVER["REQUEST_METHOD"] === "POST") {
+	if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        	die("Error de seguridad: token CSRF inválido.");
+    	}
         $user       = trim($_POST['user'] ?? '');
         $name       = trim($_POST['name'] ?? '');
         $surnames   = trim($_POST['surnames'] ?? '');
@@ -138,6 +146,8 @@ $conexion->close();
 
                 <label for="passwd_repeat">Repetir Contraseña</label>
                 <input type="password" id="passwd_repeat" name="passwd_repeat" required>
+                
+                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
 
                 <button type="submit" id="register_submit">Confirmar</button>
             </form>
