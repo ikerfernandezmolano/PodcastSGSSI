@@ -1,6 +1,6 @@
 <?php
 // Obtiene la sesión
-session_start();
+require_once 'start.php';
 
 $_SESSION = [];
 

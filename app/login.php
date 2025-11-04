@@ -10,7 +10,7 @@ $message = "";
 $message_color = "red";
 
 // Iniciar sesión (Necesario para el token)
-session_start();
+require_once 'start.php';
 
 // Crear token CSRF si no existe
 if (!isset($_SESSION['csrf_token'])) {
