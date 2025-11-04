@@ -16,4 +16,3 @@ header("X-Frame-Options: SAMEORIGIN"); // Evita clickjacking
 header("X-Content-Type-Options: nosniff"); // Evita detección de tipo incorrecto
 header("Referrer-Policy: strict-origin-when-cross-origin"); // Controla el envío del referrer
 header("Content-Security-Policy: default-src 'self'; script-src 'self'; object-src 'none';"); // Limita scripts y recursos externos
-

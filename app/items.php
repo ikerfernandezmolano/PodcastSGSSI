@@ -1,5 +1,8 @@
 <?php
-require_once 'start.php';
+// Iniciar sesión (Necesario para el token)
+require_once 'config.php';
+// Conexión con la base de datos
+require_once 'db_connect.php';
 
 if (!isset($_SESSION['usuario'])) {
     header("Location: login.php");
@@ -8,18 +11,6 @@ if (!isset($_SESSION['usuario'])) {
 
 // Usuario logeado
 $usuario = $_SESSION['usuario'];
-
-// Configuración de la base de datos
-$hostname = "db";
-$username = "admin";
-$password = "test";
-$db = "database";
-
-// Conexión con la base de datos
-$conexion = @new mysqli($hostname, $username, $password, $db);
-if ($conexion->connect_error) {
-    die("Error de conexión: " . $conexion->connect_error);
-}
 
 // Obtener items
 $sql = "SELECT * FROM item";

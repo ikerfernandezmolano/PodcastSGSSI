@@ -1,21 +1,13 @@
 <?php
 
-// Configuración de la base de datos
-$hostname = "db";
-$username = "admin";
-$password = "test";
-$db = "database";
+// Iniciar sesión (Necesario para el token)
+require_once 'config.php';
+// Conexión con la base de datos
+require_once 'db_connect.php';
 
-require_once 'start.php';
 // Generación de token
 if (!isset($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-}
-
-// Conexión con la base de datos
-$conexion = new mysqli($hostname, $username, $password, $db);
-if ($conexion->connect_error) {
-    die("Error de conexión: " . $conexion->connect_error);
 }
 
 // Se obtiene el item al que hacemos referencia

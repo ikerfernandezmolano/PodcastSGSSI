@@ -1,21 +1,13 @@
 <?php
 
-// Configuración de la base de datos
-$hostname = "db";
-$username = "admin";
-$password = "test";
-$dbname   = "database"; 
+// Iniciar sesión (Necesario para el token)
+require_once 'config.php';
+// Conexión con la base de datos
+require_once 'db_connect.php';
 
-session_start();
 if (!isset($_SESSION['usuario'])) {
     header("Location: login.php");
     exit;
-}
-
-// Conexión con la base de datos
-$conexion = mysqli_connect($hostname, $username, $password, $dbname);
-if (!$conexion) {
-    die("Error de conexión: " . mysqli_connect_error());
 }
 
 // Se obtiene el usuario al que hacemos referencia
@@ -24,7 +16,7 @@ $userKey = isset($_GET['user']) ? trim($_GET['user']) : '';
 if ($_SESSION['usuario'] !== $userKey) {
 	die("No tienes permisos para acceder a este usuario.");
 } else {
-	$sql = "SELECT user, dni, nombre, apellidos, correo, contrasena, telefono, fecha_nacimiento 
+	$sql = "SELECT user, dni, nombre, apellidos, correo, telefono, fecha_nacimiento 
 		FROM usuario 
 		WHERE user = ?";
 	$stmt = $conexion->prepare($sql);
@@ -34,7 +26,7 @@ if ($_SESSION['usuario'] !== $userKey) {
 	$stmt->bind_param("s", $_SESSION['usuario']);
 	if ($stmt->execute()) {
 		$stmt->store_result();
-		$stmt->bind_result($user,$dni,$nombre,$apellidos,$correo,$pswd,$telefono,$fecha_nacimiento);
+		$stmt->bind_result($user,$dni,$nombre,$apellidos,$correo,$telefono,$fecha_nacimiento);
 		$stmt->fetch();
 	} else {
 		die("Error al ejecutar la consulta: " . mysqli_stmt_error($stmt));
@@ -59,7 +51,7 @@ $conexion->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Datos del Usuario</title>
     <link rel="stylesheet" href="css/show_user.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet" href="css/fontawesome-libreriaexterna.css">
 </head>
 <body>
 

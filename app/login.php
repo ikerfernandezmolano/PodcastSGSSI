@@ -1,57 +1,47 @@
 <?php
-
-// Configuración de la base de datos
-$hostname = "db";
-$username = "admin";
-$password = "test";
-$dbname   = "database";
+// Iniciar sesión (Necesario para el token)
+require_once 'config.php';
+// Conexión con la base de datos
+require_once 'db_connect.php';
 
 $message = "";
 $message_color = "red";
-
-// Iniciar sesión (Necesario para el token)
-require_once 'start.php';
 
 // Crear token CSRF si no existe
 if (!isset($_SESSION['csrf_token'])) {
 	$_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 
-// Conexión con la base de datos
-$conexion = new mysqli($hostname, $username, $password, $dbname);
-if ($conexion->connect_error) {
-    $message = "Error de conexión a la base de datos: " . $conexion->connect_error;
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+$email = $_POST['email'] ?? '';
+$passwd = $_POST['passwd'] ?? '';
+
+// Preparar consulta para buscar usuario
+$stmt = $conexion->prepare("SELECT contrasena, user FROM usuario WHERE correo = ?");
+$stmt->bind_param("s", $email);
+$stmt->execute();
+$stmt->store_result();
+
+if ($stmt->num_rows === 0) {
+    $message = "Correo no registrado.";
 } else {
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $email = $_POST['email'] ?? '';
-        $passwd = $_POST['passwd'] ?? '';
-
-        // Preparar consulta para buscar usuario
-        $stmt = $conexion->prepare("SELECT contrasena, user FROM usuario WHERE correo = ?");
-        $stmt->bind_param("s", $email);
-        $stmt->execute();
-        $stmt->store_result();
-
-        if ($stmt->num_rows === 0) {
-            $message = "Correo no registrado.";
-        } else {
-            $stmt->bind_result($db_pass, $user);
-            $stmt->fetch();
-            if (password_verify($passwd, $db_pass)) {
-                session_regenerate_id(true);
-                $_SESSION['usuario'] = $user;
-                $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-                $message = "Login correcto. Redirigiendo...";
-                $message_color = "green";
-                header("Location: items.php");
-                exit;
-            } else { 
-                $message = "Contraseña incorrecta."; 
-            }    
-        }
-        $stmt->close();
-    }
+    $stmt->bind_result($db_pass, $user);
+    $stmt->fetch();
+    if (password_verify($passwd, $db_pass)) {
+        session_regenerate_id(true);
+        $_SESSION['usuario'] = $user;
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+        $message = "Login correcto. Redirigiendo...";
+        $message_color = "green";
+        header("Location: items.php");
+        exit;
+    } else { 
+        $message = "Contraseña incorrecta."; 
+    }    
 }
+$stmt->close();
+}
+
 // Se cierra la conexión con la base de datos
 $conexion->close();
 ?>

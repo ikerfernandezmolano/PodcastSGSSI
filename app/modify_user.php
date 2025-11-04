@@ -1,20 +1,12 @@
 <?php
 
-// Configuración de la base de datos
-$hostname = "db";
-$username = "admin";
-$password = "test";
-$dbname   = "database";
+// Iniciar sesión (Necesario para el token)
+require_once 'config.php';
+// Conexión con la base de datos
+require_once 'db_connect.php';
 
-require_once 'start.php';
 if (!isset($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-}
-
-// Conexión con la base de datos
-$conexion = mysqli_connect($hostname, $username, $password, $dbname);
-if (!$conexion) {
-    die("Error de conexión: " . mysqli_connect_error());
 }
 
 // Función para consultas SQL, para reutilizar
@@ -146,7 +138,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modificar Usuario</title>
     <link rel="stylesheet" href="css/modify_user.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet" href="css/fontawesome-libreriaexterna.css">
     <script src="js/modify_user.js" defer></script>
 </head>
 <body>

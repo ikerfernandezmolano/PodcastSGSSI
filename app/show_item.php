@@ -1,16 +1,9 @@
 <?php
 
-// Configuración de la base de datos
-$hostname = "db";
-$username = "admin";
-$password = "test";
-$db = "database";
-
+// Iniciar sesión (Necesario para el token)
+require_once 'config.php';
 // Conexión con la base de datos
-$conexion = new mysqli($hostname, $username, $password, $db);
-if ($conexion->connect_error) {
-    die("Error de conexión: " . $conexion->connect_error);
-}
+require_once 'db_connect.php';
 
 // Se obtiene el item al que hacemos referencia
 $nombre = isset($_GET['item']) ? $_GET['item'] : '';
@@ -34,7 +27,7 @@ $conexion->close();
 
 <title><?= htmlspecialchars($nombre) ?></title>
 <link rel="stylesheet" href="css/show_item.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+<link rel="stylesheet" href="css/fontawesome-libreriaexterna.css">
 <div class="bar">
   <div class="volver_button">
     <a href="items.php" title="Volver al inicio">
