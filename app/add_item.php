@@ -1,6 +1,4 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
 
 // Iniciar sesión (Necesario para el token)
 require_once 'config.php';
