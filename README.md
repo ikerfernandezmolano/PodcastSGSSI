@@ -23,6 +23,11 @@ Inserta el siguiente comando dentro del repositorio para acceder a la rama:
 $ git checkout entrega_3
 ```
 
+Inserta el siguiente comando dentro del repositorio para crear los certificados TLS/SSL:
+```bash
+$ ./setup.sh
+```
+
 Importa la base de datos con nombre database.sql en la base de datos.
 
 Inserta el siguiente comando para iniciar el contenedor:
