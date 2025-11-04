@@ -1,5 +1,4 @@
 <?php
-
 // Iniciar sesión (Necesario para el token)
 require_once 'config.php';
 // Conexión con la base de datos
