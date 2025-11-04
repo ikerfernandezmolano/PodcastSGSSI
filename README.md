@@ -20,7 +20,7 @@ $ cd PodcastSGSSI
 
 Inserta el siguiente comando dentro del repositorio para acceder a la rama:
 ```bash
-$ git checkout entrega_1
+$ git checkout entrega_3
 ```
 
 Importa la base de datos con nombre database.sql en la base de datos.
