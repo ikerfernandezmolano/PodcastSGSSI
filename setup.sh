@@ -19,26 +19,25 @@ if [ ! -f server-key.pem ]; then
 fi
 
 rm -f ca-cert.srl server.csr ca-key.pem
-cd ..
 
 echo "Certificados para MySQL generados en ./mysqlcerts"
 
 
 mkdir -p ssl
+cd ../ssl
 
 # Solo generar si no existen
 if [ ! -f ssl/server.crt ] || [ ! -f ssl/server.key ]; then
     echo "Generando certificados SSL autofirmados para Apache..."
     openssl req -x509 -newkey rsa:2048 \
-      -keyout ssl/server.key \
-      -out ssl/server.crt \
+      -keyout server.key \
+      -out server.crt \
       -days 365 \
       -nodes \
       -subj "/CN=localhost"
-    echo "Certificados creados en ./ssl"
-else
-    echo "Certificados SSL de Apache ya existen, no se regeneran."
 fi
+
+echo "Certificados creados en ./ssl"
 
 
 
