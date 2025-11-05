@@ -80,53 +80,77 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $dup_stmt->close();
 
-        // Actualización (con o sin contraseña)
-        if ($passwd !== '') {
-            if ($passwd !== $passwd_r) {
-                $errorMsg = "Las contraseñas no coinciden.";
-            } else {
-                $sql = "UPDATE `usuario` 
-                        SET `nombre`=?, `apellidos`=?, `dni`=?, `correo`=?, 
-                            `telefono`=?, `fecha_nacimiento`=?, `contrasena`=? 
-                        WHERE `user`=?";
-                $stmt = prepare_or_die($conexion, $sql, 'UPDATE con contrasena');
-                
-                // Hashear la contraseña (usa BYCRYPT)
-                $passwd_hashed = password_hash($passwd, PASSWORD_BCRYPT);
-                
-                $stmt->bind_param("ssssssss", 
-                    $nombre_post, $apellidos, $dni_post, $correo, 
-                    $telefono, $fecha_nac, $passwd_hashed, $user_post
-                );
-                $stmt->execute();
-                $stmt->close();
-                $successMsg = "Datos actualizados (contraseña incluida).";
-                $message_color = "green";
-            }
-        } else {
-            $sql = "UPDATE `usuario` 
-                    SET `nombre`=?, `apellidos`=?, `dni`=?, `correo`=?, 
-                        `telefono`=?, `fecha_nacimiento`=? 
-                    WHERE `user`=?";
-            $stmt = prepare_or_die($conexion, $sql, 'UPDATE sin contrasena');
-            $stmt->bind_param("sssssss", 
-                $nombre_post, $apellidos, $dni_post, $correo, 
-                $telefono, $fecha_nac, $user_post
-            );
-            $stmt->execute();
-            $stmt->close();
-            $successMsg = "Datos actualizados.";
-            $message_color = "green";
+	// Validaciones de campos (igual que en register.php)
+        if ($nombre_post === '' || $apellidos === '' || $correo === '' || 
+            $dni_post === '' || $telefono === '' || $fecha_nac === '') {
+            $errorMsg = "Por favor, completa todos los campos obligatorios.";
+        } elseif (strlen($nombre_post) > 50 || strlen($apellidos) > 100 ||
+                  strlen($correo) > 100 || strlen($dni_post) > 10) {
+            $errorMsg = "Alguno de los campos excede la longitud máxima permitida.";
+        } elseif (!filter_var($correo, FILTER_VALIDATE_EMAIL)) {
+            $errorMsg = "El correo no es válido.";
+        } elseif (!preg_match('/^[0-9]{8}[A-Z]$/', strtoupper($dni_post))) {
+            $errorMsg = "El DNI debe tener 8 números y una letra mayúscula.";
+        } elseif (!preg_match('/^[679][0-9]{8}$/', $telefono)) {
+            $errorMsg = "El teléfono debe empezar por 6, 7 o 9 y tener 9 dígitos.";
+        } elseif (strtotime($fecha_nac) > time()) {
+            $errorMsg = "La fecha de nacimiento no puede ser futura.";
+        } elseif ($passwd !== '' && strlen($passwd) < 8) {
+            $errorMsg = "La nueva contraseña debe tener al menos 8 caracteres.";
         }
 
-        // Recargar datos actualizados
-        $sql = "SELECT * FROM `usuario` WHERE user = ?";
-        $stmt = prepare_or_die($conexion, $sql, 'SELECT recarga');
-        $stmt->bind_param("s", $user_post);
-        $stmt->execute();
-        $res = mysqli_stmt_get_result($stmt);
-        $usuario = mysqli_fetch_assoc($res);
-        $stmt->close();
+        // Solo continuar si no hay error de validación
+	if (!$errorMsg) {
+		// Actualización (con o sin contraseña)
+		if ($passwd !== '') {
+		    if ($passwd !== $passwd_r) {
+			$errorMsg = "Las contraseñas no coinciden.";
+		    } 
+		    else {
+			$sql = "UPDATE `usuario` 
+			        SET `nombre`=?, `apellidos`=?, `dni`=?, `correo`=?, 
+			            `telefono`=?, `fecha_nacimiento`=?, `contrasena`=? 
+			        WHERE `user`=?";
+			$stmt = prepare_or_die($conexion, $sql, 'UPDATE con contrasena');
+			
+			// Hashear la contraseña (usa BYCRYPT)
+			$passwd_hashed = password_hash($passwd, PASSWORD_BCRYPT);
+			
+			$stmt->bind_param("ssssssss", 
+			    $nombre_post, $apellidos, $dni_post, $correo, 
+			    $telefono, $fecha_nac, $passwd_hashed, $user_post
+			);
+			$stmt->execute();
+			$stmt->close();
+			$successMsg = "Datos actualizados (contraseña incluida).";
+			$message_color = "green";
+		    }
+		} 
+		else {
+		    $sql = "UPDATE `usuario` 
+			    SET `nombre`=?, `apellidos`=?, `dni`=?, `correo`=?, 
+			        `telefono`=?, `fecha_nacimiento`=? 
+			    WHERE `user`=?";
+		    $stmt = prepare_or_die($conexion, $sql, 'UPDATE sin contrasena');
+		    $stmt->bind_param("sssssss", 
+			$nombre_post, $apellidos, $dni_post, $correo, 
+			$telefono, $fecha_nac, $user_post
+		    );
+		    $stmt->execute();
+		    $stmt->close();
+		    $successMsg = "Datos actualizados.";
+           	 $message_color = "green";
+       		 }
+
+		// Recargar datos actualizados
+		$sql = "SELECT * FROM `usuario` WHERE user = ?";
+		$stmt = prepare_or_die($conexion, $sql, 'SELECT recarga');
+		$stmt->bind_param("s", $user_post);
+		$stmt->execute();
+		$res = mysqli_stmt_get_result($stmt);
+		$usuario = mysqli_fetch_assoc($res);
+		$stmt->close();
+	}
     }
 }
 ?>
@@ -188,8 +212,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 <details>
                     <summary>Cambiar contraseña</summary>
-                    <label for="contrasena">Contraseña</label>
-                    <input type="password" id="contrasena" name="contrasena">
+                    <label for="contrasena">Contraseña (Mínimo 8 cáracteres) </label>
+                    <input type="password" id="contrasena" name="contrasena"value="<?= htmlspecialchars($usuario['contrasena']) ?>" required>
+
                     <label for="contrasena_repeat">Repetir Contraseña</label>
                     <input type="password" id="contrasena_repeat" name="contrasena_repeat">
                 </details>

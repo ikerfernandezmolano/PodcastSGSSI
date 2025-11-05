@@ -28,16 +28,34 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $fNcto      = trim($_POST['fNcto'] ?? '');
         $passwd     = $_POST['passwd'] ?? '';
         $passwd_repeat = $_POST['passwd_repeat'] ?? '';
+        
+        $errores = [];
+        
+    // VALIDACIÓN: campos vacíos
+    if ($user === '' || $name === '' || $surnames === '' ||
+        $dni === '' || $email === '' || $tlfn === '' || $fNcto === '' || $passwd === '') {
+        $errores[] = "Por favor, completa todos los campos obligatorios.";
+    }
 
-        if ($passwd !== $passwd_repeat) {
-            // Contraseñas iguales
-            $message = "Las contraseñas no coinciden.";
-        } elseif (
-            $user === '' || $name === '' || $surnames === '' ||
-            $dni === '' || $email === '' || $tlfn === '' || $fNcto === '' || $passwd === ''
-        ) { 
-            // Si no se rellena algún campo
-            $message = "Por favor, completa todos los campos obligatorios.";
+    // VALIDACIÓN: longitudes máximas
+    if (strlen($user) > 30) $errores[] = "El usuario no puede tener más de 30 caracteres.";
+    if (strlen($name) > 50) $errores[] = "El nombre no puede tener más de 50 caracteres.";
+    if (strlen($surnames) > 100) $errores[] = "Los apellidos no pueden tener más de 100 caracteres.";
+    if (strlen($email) > 100) $errores[] = "El correo no puede tener más de 100 caracteres.";
+    if (strlen($dni) > 10) $errores[] = "El DNI no puede tener más de 10 caracteres.";
+    
+     // VALIDACIÓN: formatos
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) $errores[] = "El correo electrónico no es válido.";
+    if (!preg_match('/^[0-9]{8}[A-Z]$/', $dni)) $errores[] = "El DNI debe tener 8 números y una letra (mayúscula).";
+    if (!preg_match('/^[679][0-9]{8}$/', $tlfn)) $errores[] = "El teléfono debe empezar por 6, 7 o 9 y tener 9 dígitos.";
+    if (strlen($passwd) < 8) $errores[] = "La contraseña debe tener al menos 8 caracteres.";
+    if ($passwd !== $passwd_repeat) $errores[] = "Las contraseñas no coinciden.";
+
+    // VALIDACIÓN: fecha (no permitir futuras)
+    if (strtotime($fNcto) > time()) $errores[] = "La fecha de nacimiento no puede ser futura.";
+
+    if (!empty($errores)) {
+        $message = implode("<br>", $errores);   
         } else {
             // Insercción del usuario en la base de datos
             $sql = "INSERT INTO usuario 
@@ -136,8 +154,8 @@ $conexion->close();
                 <label for="fNcto">Fecha de Nacimiento</label>
                 <input type="date" id="fNcto" name="fNcto" required value="<?= htmlspecialchars($_POST['fNcto'] ?? '') ?>">
 
-                <label for="passwd">Contraseña</label>
-                <input type="password" id="passwd" name="passwd" required>
+                <label for="passwd">Contraseña (mínimo 8 caracteres) </label>
+                <input type="password" id="passwd" name="passwd"  required value="<?= htmlspecialchars($_POST['passwd'] ?? '') ?>">
 
                 <label for="passwd_repeat">Repetir Contraseña</label>
                 <input type="password" id="passwd_repeat" name="passwd_repeat" required>
