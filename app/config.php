@@ -1,7 +1,7 @@
 <?php
 
 // No mostrar errores en pantalla
-ini_set('display_errors', 0);
+ini_set('display_errors', 1);
 // Activar el registro de errores
 ini_set('log_errors', 1);
 // Definir el archivo de log donde se guardarán los errores

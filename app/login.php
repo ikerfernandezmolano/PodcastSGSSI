@@ -12,35 +12,69 @@ if (!isset($_SESSION['csrf_token'])) {
 	$_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-$email = $_POST['email'] ?? '';
-$passwd = $_POST['passwd'] ?? '';
-
-// Preparar consulta para buscar usuario
-$stmt = $conexion->prepare("SELECT contrasena, user FROM usuario WHERE correo = ?");
-$stmt->bind_param("s", $email);
-$stmt->execute();
-$stmt->store_result();
-
-if ($stmt->num_rows === 0) {
-    $message = "Correo no registrado.";
-} else {
-    $stmt->bind_result($db_pass, $user);
-    $stmt->fetch();
-    if (password_verify($passwd, $db_pass)) {
-        session_regenerate_id(true);
-        $_SESSION['usuario'] = $user;
-        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-        $message = "Login correcto. Redirigiendo...";
-        $message_color = "green";
-        header("Location: items.php");
-        exit;
-    } else { 
-        $message = "Contraseña incorrecta."; 
-    }    
+// Inicializar intentos y bloqueo
+if (!isset($_SESSION['login_attempts'])) {
+    $_SESSION['login_attempts'] = 3;
 }
-$stmt->close();
+if (!isset($_SESSION['lockout_time'])) {
+    $_SESSION['lockout_time'] = 0;
 }
+
+$current_time=time();
+
+// Si está bloqueado, comprobamos si ya pasaron 3 minutos
+if ($_SESSION['lockout_time'] > 0) {
+    $remaining = 180 - ($current_time - $_SESSION['lockout_time']); // 180s = 3 minutos
+    if ($remaining > 0) {
+        $message = "Demasiados intentos fallidos. Espera " . ceil($remaining / 60) . " minuto(s) para volver a intentarlo.";
+    } else {
+        // Bloqueo expirado → reset
+        $_SESSION['login_attempts'] = 3;
+        $_SESSION['lockout_time'] = 0;
+    }
+}
+
+//Si no está bloqueado
+if ($_SESSION['lockout_time'] > 0 && $message !== "") {
+    // Evitamos procesar el formulario
+} elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
+	$email = $_POST['email'] ?? '';
+	$passwd = $_POST['passwd'] ?? '';
+
+	// Preparar consulta para buscar usuario
+	$stmt = $conexion->prepare("SELECT contrasena, user FROM usuario WHERE correo = ?");
+	$stmt->bind_param("s", $email);
+	$stmt->execute();
+	$stmt->store_result();
+
+	if ($stmt->num_rows === 0) {
+	    $message = "Correo no registrado.";
+	    $_SESSION['login_attempts']--;
+	} else {
+	    $stmt->bind_result($db_pass, $user);
+	    $stmt->fetch();
+	    if (password_verify($passwd, $db_pass)) {
+		session_regenerate_id(true);
+		$_SESSION['usuario'] = $user;
+		$_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+		$_SESSION['login_attempts'] = 3;
+		$_SESSION['lockout_time'] = 0;
+		$message = "Login correcto. Redirigiendo...";
+		$message_color = "green";
+		header("Location: items.php");
+		exit;
+	    } else { 
+		$message = "Contraseña incorrecta."; 
+		$_SESSION['login_attempts']--;
+	    }    
+	}
+	$stmt->close();
+}
+    // Si llega a 3 intentos, bloquear
+    if ($_SESSION['login_attempts'] <= 0) {
+        $_SESSION['lockout_time'] = time();
+        $message = "Has superado el número máximo de intentos. Espera 3 minutos antes de volver a intentarlo.";
+    }
 
 // Se cierra la conexión con la base de datos
 $conexion->close();
