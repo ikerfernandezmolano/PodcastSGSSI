@@ -4,6 +4,9 @@
 require_once 'config.php';
 // Conexión con la base de datos
 require_once 'db_connect.php';
+//rate-limit--> máximo 3 registros cada 30 segundos por IP
+require_once 'rate_limit.php';
+rate_limit_or_exit('register', 3, 300); 
 
 $message = "";
 $message_color = "red";

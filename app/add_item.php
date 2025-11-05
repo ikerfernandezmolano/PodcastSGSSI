@@ -3,6 +3,9 @@
 require_once 'config.php';
 // Conexión con la base de datos
 require_once 'db_connect.php';
+//rate-limit--> máximo 10 acciones cada minuto por IP
+require_once 'rate_limit.php';
+rate_limit_or_exit ('items', 10, 60);
 
 // Generación de token
 if (!isset($_SESSION['csrf_token'])) {
