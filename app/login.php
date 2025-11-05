@@ -4,7 +4,6 @@ require_once 'config.php';
 // Conexión con la base de datos
 require_once 'db_connect.php';
 
-
 $message = "";
 $message_color = "red";
 
