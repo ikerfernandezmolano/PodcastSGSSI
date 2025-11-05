@@ -43,11 +43,11 @@ CREATE TABLE `item` (
 --
 
 CREATE TABLE `usuario` (
-  `user` text NOT NULL,
-  `nombre` text NOT NULL,
-  `apellidos` text NOT NULL,
-  `correo` text NOT NULL,
-  `contrasena` text NOT NULL,
+  `user` varchar(30)  NOT NULL,
+  `nombre` varchar(50) NOT NULL,
+  `apellidos` varchar(100)  NOT NULL,
+  `correo` varchar(100)  NOT NULL,
+  `contrasena` varchar(255) NOT NULL,
   `telefono` char(9) NOT NULL,
   `dni` varchar(10) NOT NULL,
   `fecha_nacimiento` date NOT NULL
@@ -68,7 +68,7 @@ ALTER TABLE `item`
 -- Indices de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  ADD PRIMARY KEY (`user`(255)),
+  ADD PRIMARY KEY (`user`),
   ADD UNIQUE KEY `dni` (`dni`),
   ADD UNIQUE KEY `telefono` (`telefono`),
   ADD UNIQUE KEY `correo` (`correo`) USING HASH;
