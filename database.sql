@@ -49,7 +49,7 @@ CREATE TABLE `usuario` (
   `correo` varchar(100)  NOT NULL,
   `contrasena` varchar(255) NOT NULL,
   `telefono` char(9) NOT NULL,
-  `dni` varchar(10) NOT NULL,
+  `dni` varchar(9) NOT NULL,
   `fecha_nacimiento` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

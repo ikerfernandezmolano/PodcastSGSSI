@@ -80,12 +80,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $dup_stmt->close();
 
-	// Validaciones de campos (igual que en register.php)
+	// Validaciones de campos 
         if ($nombre_post === '' || $apellidos === '' || $correo === '' || 
             $dni_post === '' || $telefono === '' || $fecha_nac === '') {
             $errorMsg = "Por favor, completa todos los campos obligatorios.";
         } elseif (strlen($nombre_post) > 50 || strlen($apellidos) > 100 ||
-                  strlen($correo) > 100 || strlen($dni_post) > 10) {
+                  strlen($correo) > 100 || strlen($dni_post) > 9) {
             $errorMsg = "Alguno de los campos excede la longitud máxima permitida.";
         } elseif (!filter_var($correo, FILTER_VALIDATE_EMAIL)) {
             $errorMsg = "El correo no es válido.";

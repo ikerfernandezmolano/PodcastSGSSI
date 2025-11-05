@@ -42,7 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (strlen($name) > 50) $errores[] = "El nombre no puede tener más de 50 caracteres.";
     if (strlen($surnames) > 100) $errores[] = "Los apellidos no pueden tener más de 100 caracteres.";
     if (strlen($email) > 100) $errores[] = "El correo no puede tener más de 100 caracteres.";
-    if (strlen($dni) > 10) $errores[] = "El DNI no puede tener más de 10 caracteres.";
+    if (strlen($dni) > 9) $errores[] = "El DNI no puede tener más de 9 caracteres.";
     
      // VALIDACIÓN: formatos
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) $errores[] = "El correo electrónico no es válido.";
