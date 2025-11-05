@@ -12,7 +12,7 @@ fi
 
 # Generar certificado de servidor si no existe
 if [ ! -f server-key.pem ]; then
-    echo "🔧 Generando certificado SSL para el servidor de base de datos..."
+    echo "Generando certificado SSL para el servidor de base de datos..."
     openssl genrsa 2048 > server-key.pem
     openssl req -new -key server-key.pem -out server.csr -subj "/CN=db"
     openssl x509 -req -in server.csr -CA ca-cert.pem -CAkey ca-key.pem -CAcreateserial -out server-cert.pem -days 365
@@ -37,7 +37,7 @@ if [ ! -f ssl/server.crt ] || [ ! -f ssl/server.key ]; then
       -subj "/CN=localhost"
     echo "Certificados creados en ./ssl"
 else
-    echo "ℹ️ Certificados SSL de Apache ya existen, no se regeneran."
+    echo "Certificados SSL de Apache ya existen, no se regeneran."
 fi
 
 
