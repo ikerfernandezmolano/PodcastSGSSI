@@ -22,12 +22,12 @@ rm -f ca-cert.srl server.csr ca-key.pem
 
 echo "Certificados para MySQL generados en ./mysqlcerts"
 
-
+cd ..
 mkdir -p ssl
-cd ../ssl
+cd ssl
 
 # Solo generar si no existen
-if [ ! -f ssl/server.crt ] || [ ! -f ssl/server.key ]; then
+if [ ! -f server.crt ] || [ ! -f server.key ]; then
     echo "Generando certificados SSL autofirmados para Apache..."
     openssl req -x509 -newkey rsa:2048 \
       -keyout server.key \
