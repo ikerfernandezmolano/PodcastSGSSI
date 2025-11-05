@@ -1,12 +1,12 @@
 <?php
-// Desactivar salida de errores visibles antes de headers
-error_reporting(E_ALL);
+
 // No mostrar errores en pantalla
 ini_set('display_errors', 0);
 // Activar el registro de errores
 ini_set('log_errors', 1);
 // Definir el archivo de log donde se guardarán los errores
-ini_set('error_log', __DIR__ . '../logErrores.log');
+ini_set('error_log', __DIR__ . '/logErrores.log');
+error_reporting(E_ALL);
 
 // Configurar cookies de sesión de forma compatible
 if (PHP_VERSION_ID >= 70300) {
