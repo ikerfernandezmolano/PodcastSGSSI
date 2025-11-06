@@ -1,12 +1,12 @@
 <?php
 
-
+$logPath = sys_get_temp_dir() . '/logErrores.log';
 // Activar el registro de errores en un archivo del mismo proyecto
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
 
 // Definir el archivo de log 
-ini_set('error_log', sys_get_temp_dir() . '/logErrores.log');
+ini_set('error_log', $logPath);
 error_reporting(E_ALL);
 
 // Crear el archivo si no existe (de forma automática y compartible)

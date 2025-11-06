@@ -4,6 +4,9 @@
 require_once 'config.php';
 // Conexión con la base de datos
 require_once 'db_connect.php';
+//rate-limit--> máximo 15 modificaciones cada 30 segundos por IP
+require_once 'rate_limit.php';
+rate_limit_or_exit('modify_user', 15, 30); 
 
 if (!isset($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
