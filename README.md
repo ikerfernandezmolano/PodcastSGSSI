@@ -35,6 +35,8 @@ Inserta el siguiente comando para iniciar el contenedor:
 $ docker-compose up -d
 ```
 
+##OJO!! El acceso a la web sólo se puede hacer mediante HTTPS.
+
 Para pararlo:
 ```bash
 $ docker-compose stop
