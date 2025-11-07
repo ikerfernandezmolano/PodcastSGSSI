@@ -4,17 +4,12 @@ $baseDir = dirname(__DIR__);
 $logDir = $baseDir . '/private/logs';
 $logPath = $logDir . '/errores.log';
 
-// Mostrar errores si estás desarrollando
-$ENV = getenv('APP_ENV') ?: 'development';
-if ($ENV === 'development') {
-	ini_set('display_errors', 1);
-	ini_set('display_startup_errors', 1);
-    	error_reporting(E_ALL);
-} else {
-    	ini_set('display_errors', 0);
-    	ini_set('display_startup_errors', 0);
-   	error_reporting(E_ALL);
-}
+// Activar logs de PHP
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 0);
+ini_set('log_errors', 1);
+ini_set('error_log', $logPath);
+error_reporting(E_ALL);
 
 // Crear carpeta si no existe
 if (!is_dir($logDir)) {
@@ -31,14 +26,7 @@ if ($test === false) {
     	@file_put_contents($logPath, "=== LOG TEMPORAL ===\n", FILE_APPEND);
 }
 
-// Activar logs de PHP
-ini_set('log_errors', 1);
-ini_set('error_log', $logPath);
-error_reporting(E_ALL);
-
 error_log("Logger inicializado en: " . $logPath);
-
-
 
 // Incluir el manejador personalizado de logs
 require_once __DIR__ . '/logger.php';
