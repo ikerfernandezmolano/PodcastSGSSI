@@ -1,4 +1,6 @@
 mysql/
 mysqlcerts/
-logErrores.log/
 ssl/
+security/checksum.txt
+security/log/
+
