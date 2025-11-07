@@ -1,6 +1,6 @@
 <?php
-// Obtiene la sesión
-require_once 'config.php';
+// Iniciar sesión (Necesario para el token)
+require_once '../src/config.php';
 
 $_SESSION = [];
 

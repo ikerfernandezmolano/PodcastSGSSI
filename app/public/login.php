@@ -1,10 +1,10 @@
 <?php
 // Iniciar sesión (Necesario para el token)
-require_once 'config.php';
+require_once '../src/config.php';
 // Conexión con la base de datos
-require_once 'db_connect.php';
-//rate-limit--> máximo 5 intentos de identificarse cada 30 segundos por IP
-require_once 'rate_limit.php';
+require_once '../src/db_connect.php';
+//rate-limit--> máximo 10 acciones cada minuto por IP
+require_once '../src/rate_limit.php';
 rate_limit_or_exit('login', 5, 30); 
 
 

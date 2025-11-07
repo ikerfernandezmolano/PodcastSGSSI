@@ -1,9 +1,9 @@
 <?php
 
 // Iniciar sesión (Necesario para el token)
-require_once 'config.php';
+require_once '../src/config.php';
 // Conexión con la base de datos
-require_once 'db_connect.php';
+require_once '../src/db_connect.php';
 
 if (!isset($_SESSION['usuario'])) {
     header("Location: login.php");
