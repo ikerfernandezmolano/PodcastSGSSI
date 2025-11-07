@@ -1,6 +1,7 @@
 <?php
 // Iniciar sesión (Necesario para el token)
 require_once '../src/config.php';
+
 // Conexión con la base de datos
 require_once '../src/db_connect.php';
 //rate-limit--> máximo 10 acciones cada minuto por IP
