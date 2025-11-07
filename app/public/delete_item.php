@@ -6,7 +6,7 @@ require_once '../src/config.php';
 require_once '../src/db_connect.php';
 //rate-limit--> máximo 10 acciones cada minuto por IP
 require_once '../src/rate_limit.php';
-rate_limit_or_exit ('items', 10, 60);
+//rate_limit_or_exit ('items', 10, 60);
 
 // Generación de token
 if (!isset($_SESSION['csrf_token'])) {
@@ -46,7 +46,7 @@ $stmt->close();
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Eliminar Coche</title>
-  <link rel="stylesheet" href="css/items.css">
+  <link rel="stylesheet" href="css/delete_item.css">
 </head>
 <body>
   <div class="container">
@@ -60,7 +60,7 @@ $stmt->close();
               <form method="POST">
                 <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
                 <button type="submit" id="item_delete_submit">Confirmar</button>
-                <button type="button" onclick="window.location.href='items.php'">Cancelar</button>
+                <a href="items.php" class="btn-cancel">Cancelar</a>
               </form>
             <?php else: ?>
               <p>Ítem no encontrado.</p>
