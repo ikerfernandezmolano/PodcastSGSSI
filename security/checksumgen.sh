@@ -4,7 +4,7 @@ set -e  # Detener solo si hay errores graves
 mkdir -p /security/log
 
 PUBLIC_DIR="/var/www/html/public"
-CHECKSUM_FILE="/security/checksums.txt"
+CHECKSUM_FILE="/security/checksum.txt"
 
 # Limpiar archivo anterior
 > "$CHECKSUM_FILE"
