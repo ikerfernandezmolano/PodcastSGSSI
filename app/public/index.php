@@ -1,4 +1,5 @@
 <?php
+require_once '../src/config.php';
   echo '
 <link rel="stylesheet" href="css/index.css">
 <!DOCTYPE html>

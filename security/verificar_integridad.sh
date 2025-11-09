@@ -3,7 +3,7 @@ set -euo pipefail
 
 # Directorio base dentro del contenedor donde están los archivos públicos
 BASE_DIR="/var/www/html"
-CHECKSUM_FILE="/security/checksums.txt"
+CHECKSUM_FILE="/security/checksum.txt"
 
 # Comprobamos que existe el archivo de hashes
 if [ ! -f "$CHECKSUM_FILE" ]; then
