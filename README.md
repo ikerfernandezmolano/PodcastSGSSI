@@ -13,24 +13,30 @@ https://github.com/pollitoDestructor/sgssi-allianz
 ## Programas Utilizados
 Además, de ZAP, se han utilizado en el ataque:
 
-- SQLMAP, para identificar posibles casos de inyección SQL.
+# SQLMAP 
+Sirve para identificar posibles casos de inyección SQL.
   
 ```bash
 $ sudo snap install sqlmap
 ```
 
-- Hydra, para atacar por fuerza bruta.
+# Hashcat
+Para una vez obtenido un hash, intentar obtener de dónde viene:
 
-```bash
-$ sudo apt install hydra
-```
-
-- Hashcat, para una vez obtenido un hash, intentar obtener de dónde viene:
 ```bash
 $ sudo apt install hashcat
 ```
+# Seclists
+Como diccionario para los ataques por fuerza bruta:
 
-- Seclists, como diccionario para los ataques por fuerza bruta:
 ```bash
-$ 
+$ sudo snap install seclists
 ```
+
+Obtenemos el diccionario "rockyou.txt":
+
+```bash
+$ cp /snap/seclists/1214/Passwords/Leaked-Databases/rockyou.txt.tar.gz ~/
+$ tar -xzvf rockyou.txt.tar.gz
+```
+
