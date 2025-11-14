@@ -10,7 +10,7 @@ Se ha atacado la rama entrega_1 del Allianz. Repositorio:
 
 https://github.com/pollitoDestructor/sgssi-allianz
 
-# Pasos para ponerlo en marcha
+# PASOS PARA INICIAR EL SITIO WEB VÍCTIMA
 
 Se clona el repositorio con SSH, en la versión de la rama entrega_1:
   
@@ -29,23 +29,23 @@ Se importa la base de datos, mediante phpMyAdmin desde:
 
 http://localhost:8890
 
-## Programas Utilizados
+# PROGRAMAS UTILIZADOS
 Además, de ZAP, se han utilizado en el ataque:
 
-# SQLMAP 
+## SQLMAP 
 Sirve para identificar posibles casos de inyección SQL.
   
 ```bash
 $ sudo snap install sqlmap
 ```
 
-# Hashcat
+## Hashcat
 Para una vez obtenido un hash, intentar obtener de dónde viene:
 
 ```bash
 $ sudo apt install hashcat
 ```
-# Seclists
+## Seclists
 Como diccionario para los ataques por fuerza bruta:
 
 ```bash
