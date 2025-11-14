@@ -10,6 +10,25 @@ Se ha atacado la rama entrega_1 del Allianz. Repositorio:
 
 https://github.com/pollitoDestructor/sgssi-allianz
 
+# Pasos para ponerlo en marcha
+
+Se clona el repositorio con SSH, en la versión de la rama entrega_1:
+  
+```bash
+$ git clone -b entrega_1 git@github.com:pollitoDestructor/sgssi-allianz.git
+```
+
+Se accede al directorio y se inicia docker-compose:
+  
+```bash
+$ cd sgssi-allianz/
+$ docker-compose up -d
+```
+
+Se importa la base de datos, mediante phpMyAdmin desde:
+
+http://localhost:8890
+
 ## Programas Utilizados
 Además, de ZAP, se han utilizado en el ataque:
 
